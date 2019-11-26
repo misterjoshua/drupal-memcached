@@ -1,0 +1,7 @@
+
+Helm is now deploying.
+
+To access drupal, add {{ .Values.ingress.host }} and this server to your hosts file.
+
+Access the site through: http://{{ .Values.ingress.host }}/
+

@@ -1,0 +1,27 @@
+database:
+  image: mysql:5
+  rootPassword: rootpw
+  userName: drupal
+  userPassword: changeme
+  persistence:
+    storageClass: ""
+
+drupal:
+  image: drupal:8
+  persistence:
+    storageClass: ""
+
+imageCredentials: ~
+  # registry: server
+  # username: username
+  # password: password
+
+scheduler: ""
+persistence:
+  storageClass: ""
+
+dev:
+  path: ""
+
+ingress:
+  host: ~

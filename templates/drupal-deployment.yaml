@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drupal
+spec:
+  selector:
+    matchLabels:
+      app: drupal
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: drupal
+    spec:
+      schedulerName: {{ .Values.scheduler }}
+{{- if .Values.imageCredentials }}
+      imagePullSecrets:
+        - name: drupal-image-pull-secrets
+{{- end }}
+      containers:
+        - name: drupal
+          image: {{ .Values.drupal.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+          env:
+            - name: DRUPAL_DB_USERNAME
+              valueFrom:
+                secretKeyRef: { name: mysql-secret, key: user-name }
+            - name: DRUPAL_DB_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: mysql-secret, key: user-password }
+            - name: DRUPAL_MEMCACHE_SERVER
+              value: memcached:11211
+          volumeMounts:
+            - mountPath: /data
+              name: drupal-data
+{{- if .Values.dev.path }}
+            - mountPath: /var/www/html
+              name: dev-drupal
+            - mountPath: /data/config
+              name: dev-drupal-config
+{{- end }}
+      volumes:
+        - name: drupal-data
+          persistentVolumeClaim: { claimName: drupal-data }
+{{- if .Values.dev.path }}
+        - name: dev-drupal
+          hostPath: { path: {{ .Values.dev.path }}/docroot }
+        - name: dev-drupal-config
+          hostPath: { path: {{ .Values.dev.path }}/config }
+{{- end }}

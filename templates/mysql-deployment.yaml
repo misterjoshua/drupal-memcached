@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      initContainers:
+        - name: mysql-init
+          image: wheatstalk/mysql-password-initcontainer:0.1
+          imagePullPolicy: Always
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: mysql-secret, key: root-password }
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef: { name: mysql-secret, key: user-name }
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: mysql-secret, key: user-password }
+            - name: MYSQL_DATABASE
+              value: drupal
+          volumeMounts:
+            - mountPath: /mysql-init
+              name: mysql-init
+      containers:
+      - name: mysql
+        image: {{ .Values.database.image }}
+        args:
+          - mysqld
+          - --init-file=/mysql-init/set-passwords-5.7plus.sql
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi
+          limits:
+            memory: 256Mi
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef: { name: mysql-secret, key: root-password }
+        ports:
+          - containerPort: 3306
+        volumeMounts:
+          - mountPath: /mysql-init
+            name: mysql-init
+          - mountPath: /var/lib/mysql
+            name: mysql-data
+      volumes:
+        - name: mysql-init
+          emptyDir: {}
+        - name: mysql-data
+          persistentVolumeClaim: { claimName: "mysql-data" }
