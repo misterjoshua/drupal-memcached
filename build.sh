@@ -11,8 +11,11 @@ helm init --client-only >/dev/null
 
 if [ ! -d "$BUILD_DIR" ]; then
     log "Creating build dir at $BUILD_DIR"
-    mkdir $BUILD_DIR
+    mkdir "$BUILD_DIR"
 fi
 
+VERSION=$(git describe --tags || echo 0.0.0)
+log "Chart version $VERSION"
+
 log "Creating helm package"
-helm package . -d $BUILD_DIR
+helm package . --version "$VERSION" --destination "$BUILD_DIR"
