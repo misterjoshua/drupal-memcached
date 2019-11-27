@@ -11,5 +11,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Run a one-line script
+    - name: Run the build script
       run: ./build.sh
+    - uses: actions/upload-artifact@v1
+      with:
+        name: build
+        path: build
