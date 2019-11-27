@@ -1,3 +1,4 @@
 #!/bin/bash
 
-helm package . -d releases
+mkdir build
+helm package . -d build
