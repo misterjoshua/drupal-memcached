@@ -1,4 +1,4 @@
-{{- if .Values.ingress.host }}
+{{- if (or .Values.ingress.host .Values.ingress.hosts) }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -6,6 +6,7 @@ metadata:
   annotations: {}
 spec:
   rules:
+{{- if .Values.ingress.host }}
     - host: {{ .Values.ingress.host }}
       http:
         paths:
@@ -13,4 +14,14 @@ spec:
           backend:
             serviceName: drupal
             servicePort: 80
+{{ end }}
+{{ range .Values.ingress.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+        - path: /
+          backend:
+            serviceName: drupal
+            servicePort: 80
+{{ end }}
 {{ end -}}
