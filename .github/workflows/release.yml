@@ -22,8 +22,28 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Fetch the build artifact
       - uses: actions/download-artifact@v1
         with:
           name: build
           path: build
-      - run: find . -type f
+      # Create a release
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: A new release!
+          draft: true
+          prerelease: false
+      # Upload an asset to the release
+      - uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/drupal-memcached-${{ github.ref }}.tgz
+          asset_name: drupal-memcached-${{ github.ref }}.tgz
+          asset_content_type: application/tar+gzip
