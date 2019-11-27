@@ -22,6 +22,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
       # Fetch the build artifact
       - uses: actions/download-artifact@v1
         with:
@@ -44,6 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/drupal-memcached-${{ github.ref }}.tgz
-          asset_name: drupal-memcached-${{ github.ref }}.tgz
+          asset_path: ./build/drupal-memcached-${{ steps.get_version.name }}.tgz
+          asset_name: drupal-memcached-${{ steps.get_version.name }}.tgz
           asset_content_type: application/tar+gzip
