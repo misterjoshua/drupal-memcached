@@ -34,7 +34,7 @@ if (getenv('DRUPAL_MEMCACHE_SERVER')) {
     $settings['cache']['default'] = 'cache.backend.memory';
   } else {
     // Register the memcache service overrides
-    $settings['cache']['default'] = 'cache.backend.memcache';
+    // $settings['cache']['default'] = 'cache.backend.memcache';
   }
 }
 
@@ -74,3 +74,4 @@ $settings['entity_update_backup'] = TRUE;
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
+

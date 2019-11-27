@@ -9,6 +9,13 @@ mkdir -p /data/config
 echo "Ensuring /data owner is www-data:www-data"
 chown -R www-data:www-data /data/*
 
+echo "Copying drupal settings into place"
+cp /drupal-scripts/settings*.php /var/www/html/sites/default/
+
+echo "Configuring apache"
+rm -f /etc/apache2/sites-available/*.conf
+cp /drupal-scripts/vhost.conf /etc/apache2/sites-available/000-default.conf
+
 echo "Starting up"
 
 if [ ! -z "$*" ]; then
