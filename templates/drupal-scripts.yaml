@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: drupal-scripts
+data:
+  entrypoint.sh: |-
+    {{- .Files.Get "files/entrypoint.sh" | nindent 4 }}
+  settings.memcached.php: |-
+    {{- .Files.Get "files/settings.memcached.php" | nindent 4 }}
+  settings.php: |-
+    {{- .Files.Get "files/settings.php" | nindent 4 }}
+  vhost.conf: |-
+    {{- .Files.Get "files/vhost.conf" | nindent 4 }}
