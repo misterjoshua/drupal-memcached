@@ -9,26 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Run the build script
-      run: ./build.sh
-    - uses: actions/upload-artifact@v1
-      with:
-        name: build
-        path: build
-  
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/v}
-      # Fetch the build artifact
-      - uses: actions/download-artifact@v1
-        with:
-          name: build
-          path: build
+      # Checkout
+      - uses: actions/checkout@v1
+      # Build
+      - name: Run the build script
+        run: ./build.sh
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
       # Create a release
       - uses: actions/create-release@v1
         id: create_release
