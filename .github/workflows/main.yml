@@ -17,13 +17,3 @@ jobs:
       with:
         name: build
         path: build
-  
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v1
-        with:
-          name: build
-          path: build
-      - run: find . -type f
