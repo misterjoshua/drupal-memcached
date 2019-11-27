@@ -5,9 +5,10 @@ function die() { log "$*"; exit 1; }
 
 HERE=${HERE:-$(dirname $0)}
 BUILD_DIR=${BUILD_DIR:-$HERE/build}
-VERSION=${VERSION:-$(git describe --tags || echo 0.0.0)}
+VERSION=${VERSION:-$(git describe --tags || echo v0.0.0)}
+VERSION_SEMVER=${VERSION#v}
 
-log "Chart version $VERSION"
+log "Chart version $VERSION_SEMVER"
 
 log "Initializing helm on the client-side"
 helm init --client-only >/dev/null
@@ -18,4 +19,4 @@ if [ ! -d "$BUILD_DIR" ]; then
 fi
 
 log "Creating helm package"
-helm package . --version "$VERSION" --destination "$BUILD_DIR"
+helm package . --version "$VERSION_SEMVER" --destination "$BUILD_DIR"
