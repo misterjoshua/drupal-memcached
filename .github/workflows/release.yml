@@ -47,6 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/drupal-memcached-${{ steps.get_version.VERSION }}.tgz
-          asset_name: drupal-memcached-${{ steps.get_version.VERSION }}.tgz
+          asset_path: ./build/drupal-memcached-${{ steps.get_version.outputs.VERSION }}.tgz
+          asset_name: drupal-memcached-${{ steps.get_version.outputs.VERSION }}.tgz
           asset_content_type: application/tar+gzip
