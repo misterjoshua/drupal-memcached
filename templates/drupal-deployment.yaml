@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: drupal
 spec:
@@ -7,7 +7,6 @@ spec:
     matchLabels:
       app: drupal
   replicas: 1
-  serviceName: drupal
   template:
     metadata:
       labels:
@@ -34,6 +33,14 @@ spec:
             limits:
               memory: 256Mi
           env:
+            - name: DRUPAL_DB_DRIVER
+              value: mysql
+            - name: DRUPAL_DB_HOST
+              value: mysql
+            - name: DRUPAL_DB_NAME
+              value: drupal
+            - name: DRUPAL_HASH_SALT
+              value: {{ default "changeme" .Values.drupal.hashSalt }}
             - name: DRUPAL_DB_USERNAME
               valueFrom:
                 secretKeyRef: { name: mysql-secret, key: user-name }
@@ -54,8 +61,8 @@ spec:
               name: dev-drupal-config
 {{- end }}
       volumes:
-        # - name: drupal-data
-        #   persistentVolumeClaim: { claimName: drupal-data }
+        - name: drupal-data
+          persistentVolumeClaim: { claimName: drupal-data }
         - name: drupal-scripts
           configMap: { name: drupal-scripts }
 {{- if .Values.dev.path }}
@@ -64,13 +71,3 @@ spec:
         - name: dev-drupal-config
           hostPath: { path: {{ .Values.dev.path }}/config }
 {{- end }}
-  volumeClaimTemplates:
-    - metadata:
-        name: drupal-data
-      spec:
-        accessModes:
-          - ReadWriteMany
-        storageClassName: {{ default .Values.persistence.storageClass .Values.drupal.persistence.storageClass }}
-        resources:
-          requests:
-            storage: 5Gi
