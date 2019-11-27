@@ -1,7 +1,12 @@
 
 Helm is now deploying.
 
-To access drupal, add {{ .Values.ingress.host }} and this server to your hosts file.
+To access drupal, add the ingress hosts below to your hosts file.
 
-Access the site through: http://{{ .Values.ingress.host }}/
-
+Access the site through:
+{{ if .Values.ingress.host -}}
+http://{{ .Values.ingress.host }}/
+{{- end }}
+{{ range(.Values.ingress.hosts) -}}
+http://{{ . }}/
+{{ end }}
