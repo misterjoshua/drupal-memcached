@@ -1,5 +1,7 @@
-
 Helm is now deploying.
+
+Drupal image: {{ .Values.drupal.image }} (Deployment)
+MySQL image: {{ .Values.database.image }} (StatefulSet)
 
 To access drupal, add the ingress hosts below to your hosts file.
 
