@@ -3,7 +3,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: drupal
-  annotations: {}
+  annotations:
+    bugfix: bugfix
+{{- if .Values.ingress.tls.certManager.clusterIssuer }}
+    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.certManager.clusterIssuer }}
+{{ end }}
+{{- if .Values.ingress.tls.certManager.issuer }}
+    cert-manager.io/issuer: {{ .Values.ingress.tls.certManager.issuer }}
+{{ end }}
 spec:
   rules:
 {{- if .Values.ingress.host }}
@@ -23,5 +30,16 @@ spec:
           backend:
             serviceName: drupal
             servicePort: 80
+{{ end }}
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+{{- if .Values.ingress.host }}
+      - {{ .Values.ingress.host }}
+{{ end }}
+{{ range .Values.ingress.hosts }}
+      - {{ . }}
+{{ end }}
+      secretName: drupal-cert
 {{ end }}
 {{ end -}}

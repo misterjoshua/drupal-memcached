@@ -27,3 +27,8 @@ dev:
 ingress:
   host: ~
   hosts: []
+  tls:
+    enabled: false
+    certManager:
+      clusterIssuer: ""
+      issuer: ""
