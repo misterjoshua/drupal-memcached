@@ -28,14 +28,7 @@ if (getenv('DRUPAL_MEMCACHE_SERVER')) {
 
   // Register some boot-time container definitions
   require_once __DIR__.'/settings.memcached.php';
-  _settings_memcached_boot($settings, $class_loader);
-
-  if (drupal_installation_attempted()) {
-    $settings['cache']['default'] = 'cache.backend.memory';
-  } else {
-    // Register the memcache service overrides
-    // $settings['cache']['default'] = 'cache.backend.memcache';
-  }
+  _settings_memcached($settings, $class_loader);
 }
 
 // Password hash salt.

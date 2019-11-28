@@ -1,5 +1,31 @@
 <?php
 
+define('MEMCACHE_CHECK_FILE', '/tmp/cache.backend.memcache_available');
+define('MEMCACHE_SERVICE_NAME', 'cache.backend.memcache');
+define('MEMCACHE_FALLBACK_SERVICE_NAME', 'cache.backend.memory');
+
+/**
+ * Configures memcache in settings.php if we've had at least one request
+ * where memcache's cache backend was available after bootup.
+ */
+function _settings_memcached(&$settings, $class_loader) {
+  _settings_memcached_boot($settings, $class_loader);
+
+  register_shutdown_function(function() {
+    if (\Drupal::hasService(MEMCACHE_SERVICE_NAME))
+      file_put_contents(MEMCACHE_CHECK_FILE, "1");
+  });
+
+  if (drupal_installation_attempted()) {
+    $settings['cache']['default'] = MEMCACHE_FALLBACK_SERVICE_NAME;
+  } else {
+    if (file_exists(MEMCACHE_CHECK_FILE))
+      $settings['cache']['default'] = MEMCACHE_SERVICE_NAME;
+    else
+      $settings['cache']['default'] = MEMCACHE_FALLBACK_SERVICE_NAME;
+  }
+}
+
 function _settings_memcached_boot(&$settings, $class_loader) {
   $memcache_exists = class_exists('Memcache', FALSE);
   $memcached_exists = class_exists('Memcached', FALSE);
