@@ -12,7 +12,7 @@ function _settings_memcached(&$settings, $class_loader) {
   _settings_memcached_boot($settings, $class_loader);
 
   register_shutdown_function(function() {
-    if (\Drupal::hasService(MEMCACHE_SERVICE_NAME))
+    if (\Drupal::hasService(MEMCACHE_SERVICE_NAME) && !file_exists(MEMCACHE_CHECK_FILE))
       file_put_contents(MEMCACHE_CHECK_FILE, "1");
   });
 
