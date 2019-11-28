@@ -21,3 +21,4 @@
 *.tmproj
 .vscode/
 releases/
+build/
