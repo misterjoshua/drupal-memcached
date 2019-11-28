@@ -3,6 +3,7 @@ database:
   rootPassword: rootpw
   userName: drupal
   userPassword: changeme
+  tinyConfiguration: ""
   persistence:
     storageClass: ""
 
