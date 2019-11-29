@@ -62,13 +62,11 @@ spec:
           # settings that relate to the binary log (if enabled)
           - --binlog-cache-size=4K
           - --binlog-stmt-cache-size=4K
-{{ end }}
+{{- end }}
         resources:
-          requests:
-            cpu: 50m
-            memory: 256Mi
-          limits:
-            memory: 256Mi
+{{- if .Values.database.resources }}
+{{ .Values.database.resources | toYaml | indent 12 }}
+{{- end }}
         env:
           - name: MYSQL_ROOT_PASSWORD
             valueFrom:

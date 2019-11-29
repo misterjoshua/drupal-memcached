@@ -14,14 +14,19 @@ spec:
     spec:
       containers:
         - name: memcached
-          image: memcached:1.5-alpine
+          image: {{ .Values.memcached.image }}
           args:
-            - --memory-limit=64
+            - --memory-limit={{ .Values.memcached.memory }}
           imagePullPolicy: Always
           ports:
             - containerPort: 11211
           resources:
+{{- if .Values.memcached.resources }}
+{{ .Values.memcached.resources | toYaml | indent 12 }}
+{{- else }}
             requests:
-              memory: 64Mi
+              cpu: 10m
+              memory: {{ .Values.memcached.memory }}M
             limits:
-              memory: 70Mi
+              memory: {{ add .Values.memcached.memory 10 }}M
+{{- end }}

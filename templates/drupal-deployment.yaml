@@ -27,11 +27,9 @@ spec:
           ports:
             - containerPort: 80
           resources:
-            requests:
-              cpu: 50m
-              memory: 128Mi
-            limits:
-              memory: 256Mi
+{{- if .Values.drupal.resources }}
+{{ .Values.drupal.resources | toYaml | indent 12 }}
+{{- end }}
           env:
             - name: DRUPAL_DB_DRIVER
               value: mysql

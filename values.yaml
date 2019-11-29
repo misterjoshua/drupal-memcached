@@ -12,6 +12,10 @@ drupal:
   persistence:
     storageClass: ""
 
+memcached:
+  image: memcached:1.5-alpine
+  memory: 64
+
 imageCredentials: ~
   # registry: server
   # username: username
