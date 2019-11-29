@@ -32,3 +32,8 @@ ingress:
     certManager:
       clusterIssuer: ""
       issuer: ""
+  modsecurity:
+    enabled: false
+    owasp: false
+    whitelist: ""
+    adminWhitelist: ""

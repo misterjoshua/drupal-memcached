@@ -4,13 +4,33 @@ kind: Ingress
 metadata:
   name: drupal
   annotations:
-    bugfix: bugfix
 {{- if .Values.ingress.tls.certManager.clusterIssuer }}
     cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.certManager.clusterIssuer }}
-{{ end }}
+{{- end }}
 {{- if .Values.ingress.tls.certManager.issuer }}
     cert-manager.io/issuer: {{ .Values.ingress.tls.certManager.issuer }}
-{{ end }}
+{{- end }}
+{{- if .Values.ingress.modsecurity.enabled }}
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
+{{- if .Values.ingress.modsecurity.owasp }}
+      Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
+{{- end }}
+{{- if .Values.ingress.modsecurity.whitelist }}
+      SecRule REMOTE_ADDR "!@ipMatch {{ .Values.ingress.modsecurity.whitelist }}" "id:10000,deny"
+{{- end }}
+{{- if .Values.ingress.modsecurity.adminWhitelist }}
+      SecRule REQUEST_URI "@beginsWith /admin" "id:10010,chain,deny"
+      SecRule REMOTE_ADDR "!@ipMatch {{ .Values.ingress.modsecurity.adminWhitelist }}"
+{{- end }}
+{{- end }}
+{{- if (and .Values.ingress.modsecurity.enabled .Values.ingress.modsecurity.whitelist ) }}
+    drupal-memcached/ingress.modsecurity.whitelist: {{ .Values.ingress.modsecurity.whitelist | quote }}
+{{- end }}
+{{- if (and .Values.ingress.modsecurity.enabled .Values.ingress.modsecurity.adminWhitelist ) }}
+    drupal-memcached/ingress.modsecurity.adminWhitelist: {{ .Values.ingress.modsecurity.adminWhitelist | quote }}
+{{- end }}
 spec:
   rules:
 {{- if .Values.ingress.host }}
@@ -21,8 +41,8 @@ spec:
           backend:
             serviceName: drupal
             servicePort: 80
-{{ end }}
-{{ range .Values.ingress.hosts }}
+{{- end }}
+{{- range .Values.ingress.hosts }}
     - host: {{ . }}
       http:
         paths:
@@ -30,16 +50,16 @@ spec:
           backend:
             serviceName: drupal
             servicePort: 80
-{{ end }}
+{{- end }}
 {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
 {{- if .Values.ingress.host }}
       - {{ .Values.ingress.host }}
-{{ end }}
-{{ range .Values.ingress.hosts }}
+{{- end }}
+{{- range .Values.ingress.hosts }}
       - {{ . }}
-{{ end }}
+{{- end }}
       secretName: drupal-cert
-{{ end }}
-{{ end -}}
+{{- end }}
+{{- end }}

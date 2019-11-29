@@ -1,14 +1,26 @@
-Helm is now deploying.
+Kubernetes is now deploying your release named {{ .Release.Name }} into the {{ .Release.Namespace }} namespace.
 
 Drupal image: {{ .Values.drupal.image }} (Deployment)
 MySQL image: {{ .Values.database.image }} (StatefulSet)
 
-To access drupal, add the ingress hosts below to your hosts file.
-
-Access the site through:
-{{ if .Values.ingress.host -}}
+Ingress hosts:
+{{- if .Values.ingress.host }}
 http://{{ .Values.ingress.host }}/
 {{- end }}
-{{ range(.Values.ingress.hosts) -}}
+{{- range(.Values.ingress.hosts) }}
 http://{{ . }}/
+{{- end }}
+{{ "" }}
+
+{{- if.Values.ingress.modsecurity }}
+Modsecurity is enabled.
+{{- if.Values.ingress.modsecurity.owasp }}
+- OWASP ModSecurity CRS is enabled.
+{{- end }}
+{{- if .Values.ingress.modsecurity.whitelist }}
+- A whitelist is enabled: {{ .Values.ingress.modsecurity.whitelist }}
+{{- end }}
+{{- if .Values.ingress.modsecurity.adminWhitelist }}
+- An admin whitelist is enabled: {{ .Values.ingress.modsecurity.adminWhitelist }}
+{{- end }}
 {{ end }}
