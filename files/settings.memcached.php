@@ -19,7 +19,7 @@ function _settings_memcached(&$settings, $class_loader) {
   if (drupal_installation_attempted()) {
     $settings['cache']['default'] = MEMCACHE_FALLBACK_SERVICE_NAME;
   } else {
-    if (file_exists(MEMCACHE_CHECK_FILE))
+    if (getenv('MEMCACHE_KNOWN_ENABLED') == 'true' || file_exists(MEMCACHE_CHECK_FILE))
       $settings['cache']['default'] = MEMCACHE_SERVICE_NAME;
     else
       $settings['cache']['default'] = MEMCACHE_FALLBACK_SERVICE_NAME;

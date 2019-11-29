@@ -47,6 +47,10 @@ spec:
                 secretKeyRef: { name: mysql-secret, key: user-password }
             - name: DRUPAL_MEMCACHE_SERVER
               value: memcached:11211
+{{- if .Values.drupal.memcacheKnownEnabled }}
+            - name: MEMCACHE_KNOWN_ENABLED
+              value: "true"
+{{- end }}
           volumeMounts:
             - mountPath: /data
               name: drupal-data

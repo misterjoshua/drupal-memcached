@@ -4,6 +4,7 @@ database:
   userName: drupal
   userPassword: changeme
   tinyConfiguration: ""
+  memcacheKnownEnabled: false
   persistence:
     storageClass: ""
 
