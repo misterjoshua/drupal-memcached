@@ -9,7 +9,7 @@ Features:
 * Shared `ReadWriteMany` PVC for Drupal files (works with Portworx shared volumes)
 * Memcached Deployment
 * Single-node MySQL `StatefulSet` with a volume claim template
-* Ingress resource with multiple host name support
+* Ingress resource with multiple host name and TLS support
 * Cert-manager `Issuer` and `ClusterIssuer` support (i.e., Letsencrypt/ACME)
 * Database settings are automatically configured for Drupal
 * Memcached details are auto-configure for Drupal. (Memcached backend is conditionally set based upon detection of the associated drupal module being enabled.)
