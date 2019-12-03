@@ -1,5 +1,11 @@
 <?php
 
+// Act like we're on HTTPS when provided with X-Forwarded-Proto https.
+if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+  $_SERVER['HTTPS'] = 'on';
+  $_SERVER['SERVER_PORT'] = 443;
+}
+
 // @codingStandardsIgnoreFile
 // Use the image build's deployment identifier.
 $settings['deployment_identifier'] = file_exists("/deployment-identifier")
