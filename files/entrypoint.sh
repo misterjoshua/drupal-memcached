@@ -20,6 +20,13 @@ echo "Configuring apache"
 rm -f /etc/apache2/sites-available/*.conf
 cp /drupal-scripts/vhost.conf /etc/apache2/sites-available/000-default.conf
 
+echo "Copying SA-CORE-2013-003 htaccess files"
+cp /drupal-scripts/SA-CORE-2013-003.htaccess /tmp/.htaccess
+cp /drupal-scripts/SA-CORE-2013-003.htaccess /data/public/.htaccess
+
+echo "Removing write on sites/default/files"
+chmod og-w -R /var/www/html/sites/default
+
 echo "Starting up"
 
 if [ ! -z "$*" ]; then

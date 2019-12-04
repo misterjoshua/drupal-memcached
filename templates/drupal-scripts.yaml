@@ -5,6 +5,8 @@ metadata:
 data:
   entrypoint.sh: |-
     {{- .Files.Get "files/entrypoint.sh" | nindent 4 }}
+  SA-CORE-2013-003.htaccess: |-
+    {{- .Files.Get "files/SA-CORE-2013-003.htaccess" | nindent 4 }}
   settings.memcached.php: |-
     {{- .Files.Get "files/settings.memcached.php" | nindent 4 }}
   settings.php: |-
