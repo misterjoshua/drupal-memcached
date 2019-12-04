@@ -6,8 +6,12 @@ mkdir -p /data/private
 mkdir -p /data/translations
 mkdir -p /data/config
 
+echo "Ensuring the /data-local directories exist. (Ephemeral)"
+mkdir -p /data-local/twig
+
 echo "Ensuring /data owner is www-data:www-data"
 chown -R www-data:www-data /data/*
+chown -R www-data:www-data /data-local/*
 
 echo "Copying drupal settings into place"
 cp /drupal-scripts/settings*.php /var/www/html/sites/default/

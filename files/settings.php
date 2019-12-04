@@ -50,6 +50,9 @@ $settings['file_public_path'] = '/data/public';
 $settings['translation_path'] = '/data/translations';
 $settings['file_private_path'] = '/data/private';
 $config['system.file']['path']['temporary'] = '/tmp';
+// Local twig cache.
+$settings['php_storage']['twig']['directory'] = '/data-local/twig';
+$settings['php_storage']['twig']['secret'] = $settings['hash_salt'];
 
 // Site config
 $config_directories = [];
@@ -73,4 +76,3 @@ $settings['entity_update_backup'] = TRUE;
 if (file_exists($app_root . '/' . $site_path . '/settings.local.php')) {
   include $app_root . '/' . $site_path . '/settings.local.php';
 }
-
