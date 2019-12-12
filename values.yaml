@@ -10,6 +10,7 @@ database:
 
 drupal:
   image: drupal:8
+  replicas: 1
   persistence:
     storageClass: ""
 
@@ -42,3 +43,25 @@ ingress:
     owasp: false
     whitelist: ""
     adminWhitelist: ""
+
+# Frontend
+frontend:
+  enabled: false
+  image: nginx
+  port: 80
+  replicas: 1
+
+  # Ingress configuration for the frontend.
+  ingress:
+    host: ~
+    hosts: []
+    tls:
+      enabled: false
+      certManager:
+        clusterIssuer: ""
+        issuer: ""
+    modsecurity:
+      enabled: false
+      owasp: false
+      whitelist: ""
+      adminWhitelist: ""

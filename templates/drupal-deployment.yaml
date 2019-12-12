@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: drupal
-  replicas: 1
+  replicas: {{ default 1 .Values.drupal.replicas }}
   template:
     metadata:
       labels:

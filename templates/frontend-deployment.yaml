@@ -1,0 +1,31 @@
+{{ if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  replicas: {{ .Values.frontend.replicas }}
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      schedulerName: {{ .Values.scheduler }}
+{{- if .Values.imageCredentials }}
+      imagePullSecrets:
+        - name: drupal-image-pull-secrets
+{{- end }}
+      containers:
+        - name: http
+          image: {{ .Values.frontend.image }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: {{ .Values.frontend.port }}
+          resources:
+{{- if .Values.frontend.resources }}
+{{ .Values.frontend.resources | toYaml | indent 12 }}
+{{- end }}
+{{ end }}

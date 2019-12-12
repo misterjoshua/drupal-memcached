@@ -1,14 +1,17 @@
 Kubernetes is now deploying your release named {{ .Release.Name }} into the {{ .Release.Namespace }} namespace.
 
-Drupal image: {{ .Values.drupal.image }} (Deployment)
+# MYSQL
 MySQL image: {{ .Values.database.image }} (StatefulSet)
+
+# DRUPAL
+Image: {{ .Values.drupal.image }} (Deployment)
 
 Ingress hosts:
 {{- if .Values.ingress.host }}
-http://{{ .Values.ingress.host }}/
+- {{ .Values.ingress.host }}
 {{- end }}
 {{- range(.Values.ingress.hosts) }}
-http://{{ . }}/
+- {{ . }}
 {{- end }}
 {{ "" }}
 
@@ -24,3 +27,30 @@ Modsecurity is enabled.
 - An admin whitelist is enabled: {{ .Values.ingress.modsecurity.adminWhitelist }}
 {{- end }}
 {{ end }}
+
+{{- if .Values.frontend.enabled }}
+# FRONTEND
+Image: {{ .Values.frontend.image }} (Deployment)
+
+Ingress hosts:
+{{- if .Values.frontend.ingress.host }}
+- {{ .Values.frontend.ingress.host }}
+{{- end }}
+{{- range(.Values.frontend.ingress.hosts) }}
+- {{ . }}
+{{- end }}
+{{ "" }}
+
+{{- if.Values.frontend.ingress.modsecurity }}
+Modsecurity is enabled.
+{{- if.Values.frontend.ingress.modsecurity.owasp }}
+- OWASP ModSecurity CRS is enabled.
+{{- end }}
+{{- if .Values.frontend.ingress.modsecurity.whitelist }}
+- A whitelist is enabled: {{ .Values.frontend.ingress.modsecurity.whitelist }}
+{{- end }}
+{{- if .Values.frontend.ingress.modsecurity.adminWhitelist }}
+- An admin whitelist is enabled: {{ .Values.frontend.ingress.modsecurity.adminWhitelist }}
+{{- end }}
+{{ end }}
+{{- end }}
