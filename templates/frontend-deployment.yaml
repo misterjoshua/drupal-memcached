@@ -24,6 +24,10 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.frontend.port }}
+          env:
+{{- if .Values.frontend.env }}
+{{ .Values.frontend.env | toYaml | indent 12 }}
+{{- end }}
           resources:
 {{- if .Values.frontend.resources }}
 {{ .Values.frontend.resources | toYaml | indent 12 }}

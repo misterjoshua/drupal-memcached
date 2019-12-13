@@ -31,6 +31,9 @@ spec:
 {{ .Values.drupal.resources | toYaml | indent 12 }}
 {{- end }}
           env:
+{{- if .Values.drupal.env }}
+{{ .Values.drupal.env | toYaml | indent 12 }}
+{{- end }}
             - name: DRUPAL_DB_DRIVER
               value: mysql
             - name: DRUPAL_DB_HOST

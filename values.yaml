@@ -53,6 +53,7 @@ frontend:
 
   # Ingress configuration for the frontend.
   ingress:
+    drupalFiles: false
     host: ~
     hosts: []
     tls:
