@@ -11,6 +11,7 @@ database:
 drupal:
   image: drupal:8
   replicas: 1
+  chartEntrypoint: true
   persistence:
     storageClass: ""
 

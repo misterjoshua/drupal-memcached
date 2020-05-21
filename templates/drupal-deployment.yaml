@@ -21,9 +21,11 @@ spec:
         - name: drupal
           image: {{ .Values.drupal.image }}
           imagePullPolicy: Always
+{{- if .Values.drupal.chartEntrypoint }}
           command:
             - /bin/bash
             - /drupal-scripts/entrypoint.sh
+{{- end }}
           ports:
             - containerPort: 80
           resources:
